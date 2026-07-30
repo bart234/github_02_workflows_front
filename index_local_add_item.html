@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Uproszczony Front</title>
+</head>
+<body>
+
+    <!-- 1. FORMULARZ DO DODAWANIA DANYCH (POST) -->
+    <h3>Dodaj nowy przedmiot:</h3>
+    <form id="itemForm">
+        Nazwa: <input type="text" id="itemName" required><br><br>
+        Opis: <input type="text" id="itemDesc" required><br><br>
+        <button type="submit">Wyślij do bazy (POST)</button>
+    </form>
+
+    <br><hr><br>
+
+    <!-- 2. PRZYCISK DO TESTU POŁĄCZENIA (GET) -->
+    <button id="fetchButton">Pobierz dane testowe (GET)</button>
+
+    <br><br>
+
+    <!-- 3. MIEJSCE NA WYNIK Z BACKENDU -->
+    <strong>Wynik:</strong>
+    <pre id="apiResponse">Tutaj pojawi się odpowiedź z bazy...</pre>
+
+    <!-- LOGIKA JAVASCRIPT -->
+    <script>
+        const BASE_URL = "http://localhost";
+        const responseElement = document.getElementById('apiResponse');
+
+        // Obsługa wysyłania formularza (POST)
+        document.getElementById('itemForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Blokujemy przeładowanie strony
+            
+            const payload = {
+                name: document.getElementById('itemName').value,
+                description: document.getElementById('itemDesc').value
+            };
+
+            responseElement.innerText = "Wysyłanie...";
+
+            try {
+                const response = await fetch(`${BASE_URL}/items/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                responseElement.innerText = "Sukces! Zapisano w bazie:\n" + JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseElement.innerText = "Błąd zapisu: " + error.message;
+            }
+        });
+
+        // Obsługa pobierania danych (GET)
+        document.getElementById('fetchButton').addEventListener('click', async () => {
+            responseElement.innerText = "Ładowanie...";
+            try {
+                const response = await fetch(`${BASE_URL}/api/dane`);
+                const data = await response.json();
+                responseElement.innerText = "Otrzymano z GET:\n" + JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseElement.innerText = "Błąd pobierania: " + error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>
