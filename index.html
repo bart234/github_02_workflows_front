@@ -27,7 +27,7 @@
 
     <!-- LOGIKA JAVASCRIPT -->
     <script>
-        const BASE_URL = "https://lemon-plant-034f5980f.7.azurestaticapps.net";
+        const BASE_URL = "https://appname2pipeline-a9dudxdzb3fadaey.polandcentral-01.azurewebsites.net";
         const responseElement = document.getElementById('apiResponse');
 
         // Obsługa wysyłania formularza (POST)
@@ -59,7 +59,7 @@
         document.getElementById('fetchButton').addEventListener('click', async () => {
             responseElement.innerText = "Ładowanie...";
             try {
-                const response = await fetch(`${BASE_URL}/`);
+                const response = await fetch(`${BASE_URL}/items/2`);
                 const data = await response.json();
                 responseElement.innerText = "Otrzymano z GET:\n" + JSON.stringify(data, null, 2);
             } catch (error) {
